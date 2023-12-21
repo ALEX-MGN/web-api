@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чат WebSocket</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
+
+<body class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="w-full max-w-md p-4 bg-white rounded shadow-md">
+        <h1 class="text-2xl font-semibold mb-4">Чат WebSocket, а также уведомления о CRUD-операциях</h1>
+        <h2 class="mb-2">Ваше ID: <span id="ws-id" class="font-bold"></span></h2>
+        <form onsubmit="sendMessage(event)">
+            <input type="text" id="messageText" class="w-full p-2 border border-gray-300 rounded" autocomplete="off">
+            <button type="submit" class="w-full bg-green-500 text-white p-2 mt-2 rounded">Отправить</button>
+        </form>
+        <ul id="messages" class="mt-4"></ul>
+    </div>
+
+    <script>
+        function appendMessage(msg) {
+            let messages = document.getElementById('messages');
+            let message = document.createElement('li');
+            let content = document.createTextNode(msg);
+            message.appendChild(content);
+            messages.appendChild(message);
+        }
+
+        let client_id = Math.floor(Math.random() * 1000) + 1;
+        document.getElementById("ws-id").textContent = client_id;
+        let ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
+
+        ws.onmessage = function (event) {
+            appendMessage(event.data);
+        };
+
+        function sendMessage(event) {
+            let input = document.getElementById("messageText");
+            ws.send(input.value);
+            input.value = '';
+            event.preventDefault();
+        }
+    </script>
+</body>
+
+</html>
