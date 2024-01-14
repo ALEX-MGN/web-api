@@ -30,7 +30,7 @@
 
         let client_id = Math.floor(Math.random() * 1000) + 1;
         document.getElementById("ws-id").textContent = client_id;
-        let ws = new WebSocket(`ws://localhost:8000/ws/${client_id}`);
+        let ws = new WebSocket(`wss://domain:port/ws/${client_id}`);
 
         ws.onmessage = function (event) {
             appendMessage(event.data);
